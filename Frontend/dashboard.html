@@ -32,7 +32,27 @@
       <header class="bg-white shadow p-4 flex justify-between items-center md:hidden">
         <h1 class="text-lg font-bold text-gray-700">LibroTrack - <span id="username">Usuario</span></h1>
         <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded">Cerrar sesión</button>
+
+        <button id="mobileMenuBtn" class="text-gray-600 focus:outline-none md:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        
       </header>
+
+      <div id="mobileMenu" class="md:hidden bg-white shadow px-4 py-3 hidden">
+        <ul class="space-y-2">
+          <li><a href="#home" onclick="mostrarSeccion('home'); toggleMenu()" class="block">Inicio</a></li>
+          <li><a href="#agregar" onclick="mostrarSeccion('agregar'); toggleMenu()" class="block">Agregar libro</a></li>
+          <li><a href="#ventas" onclick="mostrarSeccion('ventas'); toggleMenu()" class="block">Registrar venta</a></li>
+          <li><a href="#listado" onclick="mostrarSeccion('listado'); toggleMenu()" class="block">Ventas realizadas</a></li>
+          <li><a href="#reportes" onclick="mostrarSeccion('reportes'); toggleMenu()" class="block">Reportes</a></li>
+        </ul>
+      </div>
+      
 
       <main class="p-4 space-y-8">
         <!-- Home -->
@@ -237,6 +257,18 @@
       mostrarNombreUsuario();
       mostrarSeccion("home");
     };
+  
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+  
+    function toggleMenu() {
+      mobileMenu.classList.toggle("hidden");
+    }
+  
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener("click", toggleMenu);
+    }
   </script>
+  
 </body>
 </html>
