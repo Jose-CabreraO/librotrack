@@ -6,8 +6,27 @@
   <title>Login - LibroTrack</title>
   <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    @media (min-width: 768px) {
+      .toggle-buttons {
+        display: none !important;
+      }
+    }
+    .toggle-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px;
+    }
+  </style>
 </head>
 <body>
+
+  <div class="toggle-buttons">
+    <button onclick="mostrarFormulario('login')" class="bg-blue-500 text-white px-4 py-2 rounded">Iniciar sesión</button>
+    <button onclick="mostrarFormulario('register')" class="bg-green-500 text-white px-4 py-2 rounded">Registrarse</button>
+  </div>
+
   <div class="container" id="container">
 
     <!-- Registro -->
@@ -85,6 +104,24 @@
 
     loginButton.addEventListener("click", () => {
       container.classList.remove("right-panel-active");
+    });
+
+    function mostrarFormulario(tipo) {
+      const login = document.querySelector('.login-container');
+      const register = document.querySelector('.register-container');
+      if (tipo === 'login') {
+        login.classList.add('active');
+        register.classList.remove('active');
+      } else {
+        register.classList.add('active');
+        login.classList.remove('active');
+      }
+    }
+
+    window.addEventListener('load', () => {
+      if (window.innerWidth <= 768) {
+        mostrarFormulario('login');
+      }
     });
   </script>
 </body>

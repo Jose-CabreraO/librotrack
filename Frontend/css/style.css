@@ -179,7 +179,6 @@ form {
     opacity: 0;
     z-index: 1;
   }
-
   50%, 100% {
     opacity: 1;
     z-index: 5;
@@ -285,45 +284,45 @@ form {
   border: 1px solid #4bb6b7;
 }
 
-/* RESPONSIVE STYLES */
 @media (max-width: 768px) {
-  body {
-    height: auto;
-    padding: 20px 10px;
-  }
-
   .container {
-    width: 100%;
+    width: 90%;
     height: auto;
     min-height: auto;
+    display: flex;
     flex-direction: column;
-    border-radius: 15px;
   }
 
-  .form-container,
   .overlay-container {
-    position: relative;
-    width: 100%;
-    transform: none !important;
-    opacity: 1 !important;
-    z-index: 1 !important;
-  }
-
-  .overlay {
     display: none;
   }
 
-  .login-container,
-  .register-container {
+  .form-container {
+    position: relative;
     width: 100%;
+    height: auto;
+    opacity: 1;
+    z-index: 1;
+    padding: 30px 20px;
+    display: none;
+  }
+
+  .form-container.active {
+    display: block;
+  }
+
+  .form-container form {
+    padding: 0;
   }
 
   button {
     width: 100%;
-    padding: 12px;
   }
 
-  form {
-    padding: 0 20px;
+  .toggle-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
   }
 }
