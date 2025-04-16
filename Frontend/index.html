@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - LibroTrack</title>
+  <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container" id="container">
+
+    <!-- Formulario de Registro -->
+    <div class="form-container register-container">
+      <form action="/register" method="POST">
+        <h1>Registro</h1>
+        <input type="text" name="name" placeholder="Nombre completo" required />
+        <input type="email" name="email" placeholder="Correo electrónico" required />
+        <input type="password" name="password" placeholder="Contraseña" required />
+        <button type="submit">Registrarse</button>
+        <span>O regístrate con:</span>
+        <div class="social-container">
+          <a href="#" class="social"><i class="lni lni-facebook-fill"></i></a>
+          <a href="#" class="social"><i class="lni lni-google"></i></a>
+          <a href="#" class="social"><i class="lni lni-linkedin-original"></i></a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Formulario de Login -->
+    <div class="form-container login-container">
+      <form action="/login" method="POST">
+        <h1>Iniciar sesión</h1>
+        <input type="email" name="email" placeholder="Correo electrónico" required />
+        <input type="password" name="password" placeholder="Contraseña" required />
+        <div class="content">
+          <div class="checkbox">
+            <input type="checkbox" name="checkbox" id="checkbox" />
+            <label for="checkbox">Recordarme</label>
+          </div>
+          <div class="pass-link">
+            <a href="#">¿Olvidaste tu contraseña?</a>
+          </div>
+        </div>
+        <button type="submit">Entrar</button>
+        <span>O inicia sesión con:</span>
+        <div class="social-container">
+          <a href="#" class="social"><i class="lni lni-facebook-fill"></i></a>
+          <a href="#" class="social"><i class="lni lni-google"></i></a>
+          <a href="#" class="social"><i class="lni lni-linkedin-original"></i></a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Panel deslizante -->
+    <div class="overlay-container">
+      <div class="overlay">
+        <div class="overlay-panel overlay-left">
+          <h1 class="title">¡Bienvenido!</h1>
+          <p>Si ya tienes una cuenta, inicia sesión aquí</p>
+          <button class="ghost" id="login">Iniciar sesión
+            <i class="lni lni-arrow-left login"></i>
+          </button>
+        </div>
+        <div class="overlay-panel overlay-right">
+          <h1 class="title">Regístrate en<br>LibroTrack</h1>
+          <p>Si no tienes una cuenta, puedes registrarte aquí.</p>
+          <button class="ghost" id="register">Registrarse
+            <i class="lni lni-arrow-right register"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

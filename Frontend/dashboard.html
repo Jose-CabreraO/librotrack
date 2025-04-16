@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LibroTrack - Dashboard</title>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="bg-gray-100">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-md hidden md:block">
+      <div class="p-6 border-b">
+        <h2 class="text-2xl font-bold text-gray-700">LibroTrack</h2>
+        <p id="sidebarUser" class="text-sm text-gray-500 mt-1">Bienvenido, <span class="font-semibold" id="sidebarUsername">Usuario</span></p>
+      </div>
+      <nav class="p-4">
+        <ul class="space-y-2">
+          <li><a href="#home" onclick="mostrarSeccion('home')" class="block px-4 py-2 rounded hover:bg-green-500 hover:text-white">Inicio</a></li>
+          <li><a href="#agregar" onclick="mostrarSeccion('agregar')" class="block px-4 py-2 rounded hover:bg-green-500 hover:text-white">Agregar libro</a></li>
+          <li><a href="#ventas" onclick="mostrarSeccion('ventas')" class="block px-4 py-2 rounded hover:bg-green-500 hover:text-white">Registrar venta</a></li>
+          <li><a href="#listado" onclick="mostrarSeccion('listado')" class="block px-4 py-2 rounded hover:bg-green-500 hover:text-white">Ventas realizadas</a></li>
+          <li><a href="#reportes" onclick="mostrarSeccion('reportes')" class="block px-4 py-2 rounded hover:bg-green-500 hover:text-white">Reportes</a></li>
+          <li><button onclick="logout()" class="w-full text-left px-4 py-2 rounded bg-red-500 text-white mt-4">Cerrar sesión</button></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1">
+      <header class="bg-white shadow p-4 flex justify-between items-center md:hidden">
+        <h1 class="text-lg font-bold text-gray-700">LibroTrack - <span id="username">Usuario</span></h1>
+        <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded">Cerrar sesión</button>
+      </header>
+
+      <main class="p-4 space-y-8">
+        <!-- Home -->
+        <section id="home" class="bg-white p-6 rounded shadow">
+          <h2 class="text-xl font-semibold mb-4">Inventario actual</h2>
+          <table class="w-full table-auto border-collapse">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="border px-4 py-2 text-left">Nombre</th>
+                <th class="border px-4 py-2 text-left">Precio</th>
+                <th class="border px-4 py-2 text-left">Stock</th>
+                <th class="border px-4 py-2 text-left">Imagen</th>
+              </tr>
+            </thead>
+            <tbody id="productTable">
+              <tr><td colspan="4" class="text-center py-4">Cargando productos...</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Agregar libro -->
+        <section id="agregar" class="bg-white p-6 rounded shadow hidden">
+          <h2 class="text-xl font-semibold mb-4">Agregar nuevo libro</h2>
+          <form id="addBookForm" action="/add-product" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <input type="text" name="name" placeholder="Nombre del libro" class="w-full border border-gray-300 p-2 rounded" required>
+            <input type="number" name="price" placeholder="Precio" class="w-full border border-gray-300 p-2 rounded" required>
+            <input type="number" name="stock" placeholder="Stock" class="w-full border border-gray-300 p-2 rounded" required>
+            <input type="file" name="image" accept="image/*" class="w-full">
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Guardar libro</button>
+          </form>
+        </section>
+
+        <!-- Registrar venta -->
+        <section id="ventas" class="bg-white p-6 rounded shadow hidden">
+          <h2 class="text-xl font-semibold mb-4">Registrar venta</h2>
+          <form class="space-y-4" method="POST" action="/add-sale">
+            <select name="producto" class="w-full border border-gray-300 p-2 rounded" required id="productoSelect">
+              <option value="" disabled selected>Seleccione un libro</option>
+            </select>
+            <input type="text" name="cliente" placeholder="Nombre de la persona" class="w-full border border-gray-300 p-2 rounded" required>
+            <input type="number" name="cantidad" placeholder="Cantidad de libros" class="w-full border border-gray-300 p-2 rounded" required>
+            <input type="text" name="empresa" placeholder="Empresa destino" class="w-full border border-gray-300 p-2 rounded" required>
+            <input type="text" name="factura" placeholder="Número de factura (opcional)" class="w-full border border-gray-300 p-2 rounded">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Guardar venta</button>
+          </form>
+          <p class="text-sm text-gray-600 mt-2">Si no se proporciona número de factura, el estado será <span class="text-yellow-500 font-semibold">pendiente de pago</span>.</p>
+        </section>
+
+        <!-- Listado de ventas -->
+        <section id="listado" class="bg-white p-6 rounded shadow hidden">
+          <h2 class="text-xl font-semibold mb-4">Ventas realizadas</h2>
+          <table class="w-full table-auto border-collapse">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="border px-4 py-2">Libro</th>
+                <th class="border px-4 py-2">Cliente</th>
+                <th class="border px-4 py-2">Cantidad</th>
+                <th class="border px-4 py-2">Empresa</th>
+                <th class="border px-4 py-2">Factura</th>
+                <th class="border px-4 py-2">Estado</th>
+                <th class="border px-4 py-2">Vendedor</th>
+                <th class="border px-4 py-2">Fecha</th>
+                <th class="border px-4 py-2">Total</th>
+              </tr>
+            </thead>
+            <tbody id="salesTable">
+              <tr><td colspan="9" class="text-center py-4">Cargando ventas...</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Reportes -->
+        <section id="reportes" class="bg-white p-6 rounded shadow hidden">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold">Resumen de ventas</h2>
+            <button onclick="descargarCSV()" class="bg-green-600 text-white px-4 py-2 rounded">Exportar CSV</button>
+          </div>
+          <canvas id="chartVentas" class="w-full max-w-3xl mx-auto mb-6"></canvas>
+          <p class="text-sm text-gray-600 text-center">Este gráfico representa el total de ventas agrupadas por día.</p>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    async function loadProducts() {
+      const res = await fetch("/products");
+      const data = await res.json();
+      const table = document.getElementById("productTable");
+      table.innerHTML = "";
+      if (data.length === 0) {
+        table.innerHTML = "<tr><td colspan='4' class='text-center py-4'>No hay productos cargados aún.</td></tr>";
+        return;
+      }
+      data.forEach(p => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class='border px-4 py-2'>${p.name}</td>
+          <td class='border px-4 py-2'>${new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG' }).format(p.price)}</td>
+          <td class='border px-4 py-2'>${p.stock}</td>
+          <td class='border px-4 py-2'>${p.image ? `<img src='${p.image}' width='50'>` : "Sin imagen"}</td>
+        `;
+        table.appendChild(row);
+      });
+    }
+
+    async function cargarLibrosEnSelect() {
+      const res = await fetch("/products");
+      const data = await res.json();
+      const select = document.getElementById("productoSelect");
+      select.innerHTML = '<option value="" disabled selected>Seleccione un libro</option>';
+      data.forEach(libro => {
+        const option = document.createElement("option");
+        option.value = libro.name;
+        option.textContent = `${libro.name} (Stock: ${libro.stock})`;
+        select.appendChild(option);
+      });
+    }
+
+    async function cargarVentas() {
+      const res = await fetch("/sales");
+      const data = await res.json();
+      const table = document.getElementById("salesTable");
+      table.innerHTML = "";
+      if (data.length === 0) {
+        table.innerHTML = "<tr><td colspan='9' class='text-center py-4'>No hay ventas registradas.</td></tr>";
+        return;
+      }
+      data.forEach(v => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class='border px-4 py-2'>${v.producto}</td>
+          <td class='border px-4 py-2'>${v.cliente}</td>
+          <td class='border px-4 py-2'>${v.cantidad}</td>
+          <td class='border px-4 py-2'>${v.empresa}</td>
+          <td class='border px-4 py-2'>${v.factura || '-'}</td>
+          <td class='border px-4 py-2'>${v.estado}</td>
+          <td class='border px-4 py-2'>${v.vendedor}</td>
+          <td class='border px-4 py-2'>${new Date(v.fecha).toLocaleString()}</td>
+          <td class='border px-4 py-2'>${new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG' }).format(v.total || 0)}</td>
+        `;
+        table.appendChild(row);
+      });
+    }
+
+    async function cargarGraficoVentas() {
+      const res = await fetch("/sales");
+      const data = await res.json();
+      const agrupado = {};
+      data.forEach(v => {
+        const fecha = new Date(v.fecha).toISOString().split("T")[0];
+        const total = v.total || (v.precio_unitario && v.cantidad ? v.precio_unitario * v.cantidad : 0);
+        agrupado[fecha] = (agrupado[fecha] || 0) + total;
+      });
+      const fechas = Object.keys(agrupado);
+      const totales = fechas.map(f => agrupado[f]);
+      const ctx = document.getElementById("chartVentas").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: fechas,
+          datasets: [{
+            label: "Total vendido por día",
+            data: totales,
+            backgroundColor: "#10B981"
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    async function mostrarNombreUsuario() {
+      const res = await fetch("/usuario-logueado");
+      const data = await res.json();
+      const nombre = data.name || "Usuario";
+      document.getElementById("username").textContent = nombre;
+      document.getElementById("sidebarUsername").textContent = nombre;
+    }
+
+    function mostrarSeccion(id) {
+      document.querySelectorAll("main > section").forEach(sec => sec.classList.add("hidden"));
+      const section = document.getElementById(id);
+      if (section) section.classList.remove("hidden");
+      if (id === "listado") cargarVentas();
+      if (id === "ventas") cargarLibrosEnSelect();
+      if (id === "home") loadProducts();
+      if (id === "reportes") cargarGraficoVentas();
+    }
+
+    function logout() {
+      alert("Sesión cerrada");
+      window.location.href = "/index.html";
+    }
+
+    window.onload = function () {
+      mostrarNombreUsuario();
+      mostrarSeccion("home");
+    };
+  </script>
+</body>
+</html>
